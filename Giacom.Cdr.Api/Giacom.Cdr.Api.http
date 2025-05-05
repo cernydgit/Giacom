@@ -1,0 +1,6 @@
+@Giacom.Cdr.Api_HostAddress = http://localhost:5183
+
+GET {{Giacom.Cdr.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

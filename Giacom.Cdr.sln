@@ -1,0 +1,35 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32611.190
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giacom.Cdr.Api", "Giacom.Cdr.Api\Giacom.Cdr.Api.csproj", "{288FEDCD-A3C0-4824-B5A4-829B2DCFC15D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giacom.Cdr.IntegrationTests", "Giacom.Cdr.IntegrationTests\Giacom.Cdr.IntegrationTests.csproj", "{8E10153D-FD16-49A0-AB03-D678A8DDD3BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
+	ProjectSection(SolutionItems) = preProject
+		TODO.txt = TODO.txt
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{288FEDCD-A3C0-4824-B5A4-829B2DCFC15D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{288FEDCD-A3C0-4824-B5A4-829B2DCFC15D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{288FEDCD-A3C0-4824-B5A4-829B2DCFC15D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{288FEDCD-A3C0-4824-B5A4-829B2DCFC15D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E10153D-FD16-49A0-AB03-D678A8DDD3BF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E10153D-FD16-49A0-AB03-D678A8DDD3BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E10153D-FD16-49A0-AB03-D678A8DDD3BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E10153D-FD16-49A0-AB03-D678A8DDD3BF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4253CB75-58AC-4D59-9D8B-BBB520616973}
+	EndGlobalSection
+EndGlobal

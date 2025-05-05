@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="CdrClient.nswag" />
+    <None Remove="TestData\cdr_test_data_100MB.csv" />
+    <None Remove="TestData\cdr_test_data_2.csv" />
+    <None Remove="TestData\cdr_test_data_500MB.csv" />
+    <None Remove="TestData\cdr_test_data_5GB.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\cdr_test_data_10.csv" />
+    <EmbeddedResource Include="TestData\cdr_test_data_100MB.csv" />
+    <EmbeddedResource Include="TestData\cdr_test_data_2.csv" />
+    <EmbeddedResource Include="TestData\cdr_test_data_500MB.csv" />
+    <EmbeddedResource Include="TestData\cdr_test_data_5GB.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Alba" Version="8.2.0" />
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <PackageReference Include="FluentAssertions" Version="8.2.0" />
+    <PackageReference Include="Microsoft.Azure.Kusto.Data" Version="13.0.2" />
+    <PackageReference Include="Microsoft.Azure.Kusto.Ingest" Version="13.0.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="SharpZipLib" Version="1.4.2" />
+    <PackageReference Include="xunit" Version="2.5.3" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Giacom.Cdr.Api\Giacom.Cdr.Api.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>

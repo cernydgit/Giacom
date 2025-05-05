@@ -1,0 +1,56 @@
+TODO: 
+retry options - https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-examples?view=azure-data-explorer&preserve-view=true
+
+https://learn.microsoft.com/en-us/azure/data-explorer/dealing-with-duplicates
+	deduplication - query
+	deduplication - extend tags
+
+
+get failures - https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-examples?view=azure-data-explorer&preserve-view=true#ingest-from-local-files-and-validate-ingestion
+opional direct upload
+
+NewRelic
+
+------------------
+questions:
+
+je date skutecne date?
+chybejici data
+reference typ (string, max size?)
+jaky queries se maji zimplementovat? - indexes
+
+
+solution
+ - Buffering - protoze frekvence uploadu je nizka
+ - distributed env (nemuzeme ukladat lokalne)
+
+
+extensions
+ - Solution #3: Use materialized views to deduplicate
+ - error handling (spadle ingestion jobs)
+ - deduplication
+ - validace csv
+ - sensitive data
+ - store file localy
+ - compression
+ - metadata odstranit z Model
+ - sql command timeout set on lower level
+ - overlapping files?
+ - wolverine
+ - lepsi inicializace testu
+ - SoanryQube
+ - vytvoreni/smazani db v ramci testu
+ - retry
+ - repository, cqrs
+ - rozdelit projekty na Api/Application
+ - oddelit klienta a schovat za interface
+ - separatni db pro testy 
+ - store to blob storage and  process in background
+ - unit testy
+ - XML dokumnentace swaggeru
+ - validce parametru v kontrolleru
+ - validce v modelu - pridat hlasky
+ - validce v modelu - pridat testy
+
+
+
