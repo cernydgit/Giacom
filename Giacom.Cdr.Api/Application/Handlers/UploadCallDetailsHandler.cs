@@ -21,17 +21,22 @@ namespace Giacom.Cdr.Application.Handlers
 
         public async Task Handle(UploadCallDetailsRequest command, CancellationToken cancellationToken)
         {
+            var opts = options.Value; 
             var tempFiles = CsvSplitter.SplitCsvToTempFiles(command.Stream, command.FileName);
 
-            await Parallel.ForEachAsync(tempFiles, options.Value.IngestParallelOptions, async (path, ct) =>
+            await Parallel.ForEachAsync(tempFiles, opts.IngestParallelOptions, async (path, ct) =>
             {
-                using (var ingestClient = KustoIngestFactory.CreateQueuedIngestClient(options.Value.IngestConnectionString))
+                var ingestClient = KustoIngestFactory.CreateQueuedIngestClient(
+                    opts.IngestConnectionString,
+                    new QueueOptions { MaxRetries = opts.IngestMaxRetries });
+
+                using (ingestClient)
                 {
                     foreach (var tempFile in tempFiles)
                     {
                         var fileId = Path.GetFileName(tempFile);
                         using var stream = new FileStream(tempFile, FileMode.Open, FileAccess.Read);
-                        var ingestionProps = new KustoIngestionProperties(options.Value.Database, options.Value.Table)
+                        var ingestionProps = new KustoIngestionProperties(opts.Database, opts.Table)
                         {
                             Format = DataSourceFormat.csv,
                             AdditionalTags = [Path.GetFileName(command.FileName)],

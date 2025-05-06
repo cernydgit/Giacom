@@ -8,5 +8,6 @@ namespace Giacom.Cdr.Application
         public string Table { get; set; } = string.Empty;
         public ParallelOptions IngestParallelOptions { get; set; } = new ParallelOptions { MaxDegreeOfParallelism = 1 };
         public long IngestMaxLines { get; set; } = 10000000;
+        public int IngestMaxRetries { get; set; } = 3;
     }
 }

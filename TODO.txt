@@ -1,10 +1,8 @@
 TODO: 
 
-
-retry options - https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-examples?view=azure-data-explorer&preserve-view=true
 deduplication - query - https://learn.microsoft.com/en-us/azure/data-explorer/dealing-with-duplicates
-optimalizovat split
-logger.Monitor
+
+
 Benchmarking
 
 
