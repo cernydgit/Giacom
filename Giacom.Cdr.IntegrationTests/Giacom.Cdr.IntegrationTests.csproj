@@ -38,9 +38,6 @@
     <None Update="TestData\cdr_test_data_100MB.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="TestData\cdr_test_data_2.csv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Update="TestData\cdr_test_data_500MB.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

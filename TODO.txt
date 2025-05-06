@@ -1,23 +1,21 @@
 TODO: 
 
-unit testy
+
 retry options - https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-examples?view=azure-data-explorer&preserve-view=true
 deduplication - query - https://learn.microsoft.com/en-us/azure/data-explorer/dealing-with-duplicates
 optimalizovat split
 logger.Monitor
-mediator extension dat do Applicatin.Mediator
-CsvSplitter do CSV
-add commenty copilotem
+Benchmarking
 
-namespaces
+
+add commenty a XML commenty codu copilotem
+
 cekat na agregaci?
-odebrat mediator extensions
-repository pattern
 NewRelic
-negenerovat fily do tempu
+
+repository pattern
 
 get failures - https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-examples?view=azure-data-explorer&preserve-view=true#ingest-from-local-files-and-validate-ingestion
-
 
 
 
@@ -25,7 +23,7 @@ get failures - https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-cl
 questions:
 
 je date skutecne date?
-chybejici data
+chybejici sample data
 reference typ (string, max size?)
 jaky queries se maji zimplementovat? - indexes
 

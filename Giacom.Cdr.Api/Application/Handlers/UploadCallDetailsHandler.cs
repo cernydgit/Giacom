@@ -21,7 +21,7 @@ namespace Giacom.Cdr.Application.Handlers
 
         public async Task Handle(UploadCallDetailsRequest command, CancellationToken cancellationToken)
         {
-            var tempFiles = CsvSplitter.SplitCsvToTempFiles(command.Stream, command.FileName, options.Value.IngestMaxSizeMB *1024 * 1024);
+            var tempFiles = CsvSplitter.SplitCsvToTempFiles(command.Stream, command.FileName);
 
             await Parallel.ForEachAsync(tempFiles, options.Value.IngestParallelOptions, async (path, ct) =>
             {

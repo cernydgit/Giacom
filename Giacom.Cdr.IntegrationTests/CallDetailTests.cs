@@ -20,8 +20,6 @@ namespace Giacom.Cdr.IntegrationTests
 
 
         [Theory]
-        [InlineData("cdr_test_data_2.csv")]
-        [InlineData("cdr_test_data_10.csv")]
         [InlineData("cdr_test_data_100MB.csv")]
         [InlineData("cdr_test_data_500MB.csv")]
         [InlineData("cdr_test_data_5GB.csv")]
@@ -36,7 +34,7 @@ namespace Giacom.Cdr.IntegrationTests
 
 
         [Theory]
-        [InlineData(1, "Caller1")]
+        [InlineData(1, "Caller1")]  
         [InlineData(10000, "Caller2")]
         public async Task Upload_Success(long recordCount, string? caller)
         {

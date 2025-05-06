@@ -5,98 +5,108 @@ namespace Giacom.Cdr.Application.CSV
     public static class CsvSplitter
     {
         /// <summary>
-        /// Splits an input CSV stream into multiple temporary files, each not exceeding maxChunkSize.
-        /// Each chunk will include the header line.
+        /// Splits a CSV file stream into multiple temporary files, each containing at most maxRows data lines (excluding header).
+        /// Each chunk will repeat the header line.
         /// Returns the list of temp file paths.
         /// </summary>
         /// <param name="input">Input CSV stream (must support reading).</param>
         /// <param name="fileNamePrefix">Optional prefix for temp file names; if null, a GUID is used.</param>
-        /// <param name="maxChunkSize">Maximum size of each chunk in bytes (default 500 MB).</param>
+        /// <param name="maxRows">Maximum number of data rows per chunk (default 10000000).</param>
         /// <param name="encoding">Text encoding (default UTF8).</param>
         public static List<string> SplitCsvToTempFiles(
             Stream input,
             string? fileNamePrefix = null,
-            long maxChunkSize = 500L * 1024 * 1024,
+            int maxRows = 10000000,
             Encoding? encoding = null)
         {
             encoding ??= Encoding.UTF8;
             var tempFiles = new List<string>();
-
-            // Determine prefix: use provided or generate GUID
             var prefix = string.IsNullOrWhiteSpace(fileNamePrefix)
                 ? Guid.NewGuid().ToString()
                 : fileNamePrefix;
 
-            using var reader = new StreamReader(input, encoding, detectEncodingFromByteOrderMarks: true, leaveOpen: true);
+            using var reader = new StreamReader(
+                input,
+                encoding,
+                detectEncodingFromByteOrderMarks: true,
+                leaveOpen: true,
+                bufferSize: 1 << 20);
 
-            // Read header line
             var header = reader.ReadLine();
             if (header == null)
                 return tempFiles;
 
-            FileStream? fs = null;
-            StreamWriter? writer = null;
-            long currentSize = 0;
-
-            // Local function to start a new temp file
-            void StartNewFile()
+            int fileIndex = 0;
+            CsvChunk? chunk = null;
+            try
             {
-                // Close and dispose previous writer and stream
-                if (writer != null)
+                chunk = CreateChunk(prefix, fileIndex++, header, encoding);
+                tempFiles.Add(chunk.FilePath);
+
+                string? line;
+                while ((line = reader.ReadLine()) != null)
                 {
-                    writer.Flush();
-                    writer.Dispose();
-                    fs?.Dispose();
+                    if (chunk.CurrentRow >= maxRows)
+                    {
+                        chunk.Dispose();
+                        chunk = CreateChunk(prefix, fileIndex++, header, encoding);
+                        tempFiles.Add(chunk.FilePath);
+                    }
+
+                    chunk.WriteLine(line);
                 }
+            }
+            finally
+            {
+                chunk?.Dispose();
+            }
 
-                // Create new temp file with prefix and index
-                var index = tempFiles.Count;
-                var tempPath = Path.Combine(
-                    Path.GetTempPath(),
-                    $"{prefix}_{index}.csv");
+            return tempFiles;
+        }
 
-                fs = new FileStream(
-                    path: tempPath,
+        private static CsvChunk CreateChunk(string prefix, int index, string header, Encoding encoding)
+        {
+            var filePath = Path.Combine(Path.GetTempPath(), $"{prefix}_{index}.csv");
+            return new CsvChunk(filePath, header, encoding);
+        }
+
+        private sealed class CsvChunk : IDisposable
+        {
+            private readonly FileStream stream;
+            private readonly StreamWriter writer;
+            public string FilePath { get; }
+            public int CurrentRow { get; private set; }
+
+            public CsvChunk(string filePath, string header, Encoding encoding)
+            {
+                FilePath = filePath;
+                stream = new FileStream(
+                    path: filePath,
                     mode: FileMode.Create,
                     access: FileAccess.Write,
                     share: FileShare.None,
                     bufferSize: 81920,
-                    options: FileOptions.None);
-                writer = new StreamWriter(fs, encoding) { AutoFlush = false };
+                    options: FileOptions.SequentialScan);
+                writer = new StreamWriter(stream, encoding) { AutoFlush = false };
 
                 // Write header
                 writer.WriteLine(header);
-                currentSize = encoding.GetByteCount(header + Environment.NewLine);
-
-                tempFiles.Add(tempPath);
+                stream.Flush();
+                CurrentRow = 0;
             }
 
-            // Initialize first chunk
-            StartNewFile();
-
-            string? line;
-            while ((line = reader.ReadLine()) != null)
+            public void WriteLine(string line)
             {
-                var lineBytes = encoding.GetByteCount(line + Environment.NewLine);
-
-                if (currentSize + lineBytes > maxChunkSize)
-                {
-                    StartNewFile();
-                }
-
-                writer!.WriteLine(line);
-                currentSize += lineBytes;
+                writer.WriteLine(line);
+                CurrentRow++;
             }
 
-            // Finalize last file
-            if (writer != null)
+            public void Dispose()
             {
                 writer.Flush();
                 writer.Dispose();
-                fs?.Dispose();
+                stream.Dispose();
             }
-
-            return tempFiles;
         }
     }
 }

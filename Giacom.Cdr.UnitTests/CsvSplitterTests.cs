@@ -17,6 +17,8 @@ namespace Giacom.Cdr.UnitTests
             var tempFiles = CsvSplitter.SplitCsvToTempFiles(stream, "split");
         }
 
+
+
         [Fact]
         public void SplitCsvFile_HasCorrectStructure()
         {
