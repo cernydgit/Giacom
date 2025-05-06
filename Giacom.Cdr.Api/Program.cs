@@ -3,9 +3,9 @@ using Mapster;
 using Serilog;
 using Giacom.Cdr.Domain;
 using Giacom.Cdr.Application;
-using Giacom.Cdr.Application.Mediator;
-using Microsoft.AspNetCore.Http.Features;
+using MediatR;
 using static Kusto.Data.Security.WellKnownAadResourceIds;
+using Giacom.Cdr.Application.Mediator;
 
 
 
@@ -32,7 +32,8 @@ namespace Giacom.Cdr.Api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddMediator(Assembly.GetExecutingAssembly());
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DiagnosticsPipelineBehavior<,>));
             builder.Services.Configure<CallDetailsOptions>(options => builder.Configuration.Bind("CallDetailOptions", options));
         }
 

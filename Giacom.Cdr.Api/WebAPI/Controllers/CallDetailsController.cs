@@ -30,9 +30,8 @@ namespace Giacom.Cdr.WebAPI.Controllers
             {
                 return BadRequest("CSV file is required.");
             }
-            var compressed = file.FileName != null && Path.GetExtension(file.FileName) == ".gz";
             using var stream = file.OpenReadStream();
-            await sender.Send(new UploadCallDetailsRequest(stream, compressed));
+            await sender.Send(new UploadCallDetailsRequest(stream, file.FileName));
             return Ok();
         }
 

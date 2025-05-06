@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TODO.txt = TODO.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giacom.Cdr.UnitTests", "Giacom.Cdr.UnitTests\Giacom.Cdr.UnitTests.csproj", "{CCC3FF17-BB8A-4D70-9A5C-3B2DBFE6016E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{8E10153D-FD16-49A0-AB03-D678A8DDD3BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E10153D-FD16-49A0-AB03-D678A8DDD3BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E10153D-FD16-49A0-AB03-D678A8DDD3BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCC3FF17-BB8A-4D70-9A5C-3B2DBFE6016E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCC3FF17-BB8A-4D70-9A5C-3B2DBFE6016E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCC3FF17-BB8A-4D70-9A5C-3B2DBFE6016E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCC3FF17-BB8A-4D70-9A5C-3B2DBFE6016E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

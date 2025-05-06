@@ -11,18 +11,6 @@
 
   <ItemGroup>
     <None Remove="CdrClient.nswag" />
-    <None Remove="TestData\cdr_test_data_100MB.csv" />
-    <None Remove="TestData\cdr_test_data_2.csv" />
-    <None Remove="TestData\cdr_test_data_500MB.csv" />
-    <None Remove="TestData\cdr_test_data_5GB.csv" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="TestData\cdr_test_data_10.csv" />
-    <EmbeddedResource Include="TestData\cdr_test_data_100MB.csv" />
-    <EmbeddedResource Include="TestData\cdr_test_data_2.csv" />
-    <EmbeddedResource Include="TestData\cdr_test_data_500MB.csv" />
-    <EmbeddedResource Include="TestData\cdr_test_data_5GB.csv" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,10 +27,26 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Giacom.Cdr.Api\Giacom.Cdr.Api.csproj" />
+    <ProjectReference Include="..\Giacom.Cdr.UnitTests\Giacom.Cdr.UnitTests.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="TestData\cdr_test_data_100MB.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\cdr_test_data_2.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\cdr_test_data_500MB.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="TestData\cdr_test_data_5GB.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

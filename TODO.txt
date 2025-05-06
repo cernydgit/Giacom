@@ -1,19 +1,25 @@
 TODO: 
-pridat log o velikosti souboru
-cekat na agregaci
 
+unit testy
 retry options - https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-examples?view=azure-data-explorer&preserve-view=true
+deduplication - query - https://learn.microsoft.com/en-us/azure/data-explorer/dealing-with-duplicates
+optimalizovat split
+logger.Monitor
+mediator extension dat do Applicatin.Mediator
+CsvSplitter do CSV
+add commenty copilotem
 
-https://learn.microsoft.com/en-us/azure/data-explorer/dealing-with-duplicates
-	deduplication - query
-	deduplication - extend tags
-
-DTO - zmenit na Domain
+namespaces
+cekat na agregaci?
+odebrat mediator extensions
+repository pattern
+NewRelic
+negenerovat fily do tempu
 
 get failures - https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-examples?view=azure-data-explorer&preserve-view=true#ingest-from-local-files-and-validate-ingestion
-opional direct upload
 
-NewRelic
+
+
 
 ------------------
 questions:
@@ -25,8 +31,14 @@ jaky queries se maji zimplementovat? - indexes
 
 
 solution
+ - deplication
+ - testy jsou data dependet
  - Buffering - protoze frekvence uploadu je nizka
  - distributed env (nemuzeme ukladat lokalne)
+ - assumption FileNot ingested twice?
+ - add xml comments
+ - split csv tests
+ - optimize split
 
 
 extensions

@@ -7,10 +7,10 @@ namespace Giacom.Cdr.Domain
     {
         public static void MapModels(this TypeAdapterConfig config)
         {
-            config.ForType<IDataReader, List<CallDetail>>().MapWith(reader => ToCallDetails(reader));
+            config.ForType<IDataReader, List<CallDetail>>().MapWith(reader => reader.ToCallDetails());
         }
 
-        private static List<CallDetail> ToCallDetails(IDataReader reader)
+        public static List<CallDetail> ToCallDetails(this IDataReader reader)
         {
             var result = new List<CallDetail>();
 
