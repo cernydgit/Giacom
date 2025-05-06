@@ -1,6 +1,11 @@
 using System.Reflection;
 using Mapster;
 using Serilog;
+using Giacom.Cdr.Domain;
+using Giacom.Cdr.Application;
+using Giacom.Cdr.Application.Mediator;
+using Microsoft.AspNetCore.Http.Features;
+using static Kusto.Data.Security.WellKnownAadResourceIds;
 
 
 
@@ -27,6 +32,8 @@ namespace Giacom.Cdr.Api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddMediator(Assembly.GetExecutingAssembly());
+            builder.Services.Configure<CallDetailsOptions>(options => builder.Configuration.Bind("CallDetailOptions", options));
         }
 
         private static void Configure(WebApplication app)
@@ -39,6 +46,7 @@ namespace Giacom.Cdr.Api
 
             app.MapControllers();
 
+            TypeAdapterConfig.GlobalSettings.MapModels();
         }
     }
 }

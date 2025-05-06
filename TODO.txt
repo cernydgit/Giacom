@@ -1,10 +1,14 @@
 TODO: 
+pridat log o velikosti souboru
+cekat na agregaci
+
 retry options - https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-examples?view=azure-data-explorer&preserve-view=true
 
 https://learn.microsoft.com/en-us/azure/data-explorer/dealing-with-duplicates
 	deduplication - query
 	deduplication - extend tags
 
+DTO - zmenit na Domain
 
 get failures - https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-examples?view=azure-data-explorer&preserve-view=true#ingest-from-local-files-and-validate-ingestion
 opional direct upload
