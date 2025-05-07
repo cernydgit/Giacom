@@ -15,11 +15,10 @@ namespace Giacom.Cdr.IntegrationTests
         protected CallDetailsClient? CallDetailsClient { get; private set; }
 
 
-        [Theory(Skip = "Pre-generated files are not part of repository")]
+        [Theory(Skip = "Pre-generated files are not part of repository (too big)")]
         [InlineData("cdr_test_data_100MB.csv")]
         [InlineData("cdr_test_data_500MB.csv")]
         [InlineData("cdr_test_data_5GB.csv")]
-        
         public async Task UploadFile_Success(string fileName)
         {
             // arrange
@@ -41,7 +40,7 @@ namespace Giacom.Cdr.IntegrationTests
             // act
             await CallDetailsClient!.UploadAsync(new FileParameter(stream, tempFile));
 
-            // no assert (queued ingestion has latency in minutes) - just checked if it throws an exception (queued ingestion has latency in minutes)
+            // no assert (queued ingestion has latency in minutes) - just checked if it throws an exception
         }
 
         [Theory]

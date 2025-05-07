@@ -2,18 +2,23 @@ using System.Globalization;
 using CsvHelper;
 using Mapster;
 using FluentAssertions;
+using NBench;
 
 using Giacom.Cdr.Domain;
 using Giacom.Cdr.Application.CSV;
+using Pro.NBench.xUnit.XunitExtensions;
 
 namespace Giacom.Cdr.UnitTests
 {
     public class CsvSplitterTests
     {
-        [Fact(Skip = "Pre-generated files are not part of repository")]
-        public void SplitCsv5GB_DurationCheck()
+        [NBenchFact(Skip = "Pre-generated files are not part of repository (too big)")]
+        [PerfBenchmark(NumberOfIterations = 5, TestMode = TestMode.Test)]
+        [ElapsedTimeAssertion(MaxTimeMilliseconds = 1000 * 10)] // max 10 sec
+        [Trait("Category", "Manual")]
+        public void SplitCsv5GB_DurationUnder10sec()
         {
-            using FileStream stream = new FileStream(".\\TestData\\cdr_test_data_5GB.csv", FileMode.Open, FileAccess.Read);
+            using FileStream stream = new FileStream("C:\\!Code\\!Giacom\\Giacom\\Giacom.Cdr.IntegrationTests\\TestData\\cdr_test_data_5GB.csv", FileMode.Open, FileAccess.Read);
             var tempFiles = CsvSplitter.SplitCsvToTempFiles(stream, "split");
         }
 
