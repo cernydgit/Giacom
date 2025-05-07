@@ -5,10 +5,6 @@ using Alba;
 using Giacom.Cdr.Api;
 using Giacom.Cdr.Client;
 using Giacom.Cdr.UnitTests;
-using Giacom.Cdr.Application.CSV;
-
-
-
 
 
 namespace Giacom.Cdr.IntegrationTests
@@ -19,19 +15,19 @@ namespace Giacom.Cdr.IntegrationTests
         protected CallDetailsClient? CallDetailsClient { get; private set; }
 
 
-        [Theory]
+        [Theory(Skip = "Pre-generated files are not part of repository")]
         [InlineData("cdr_test_data_100MB.csv")]
         [InlineData("cdr_test_data_500MB.csv")]
         [InlineData("cdr_test_data_5GB.csv")]
+        
         public async Task UploadFile_Success(string fileName)
         {
-            using FileStream stream = ToStream(fileName);
+            // arrange
+            using FileStream stream = new FileStream("./TestData/" + fileName, FileMode.Open, FileAccess.Read);
 
             // act
             await CallDetailsClient!.UploadAsync(new FileParameter(stream, fileName));
         }
-
-
 
         [Theory]
         [InlineData(1, "Caller1")]  
@@ -45,7 +41,7 @@ namespace Giacom.Cdr.IntegrationTests
             // act
             await CallDetailsClient!.UploadAsync(new FileParameter(stream, tempFile));
 
-            // no assert - just check if it throws an exception, queued ingestion takes quite a time
+            // no assert (queued ingestion has latency in minutes) - just checked if it throws an exception (queued ingestion has latency in minutes)
         }
 
         [Theory]
@@ -53,13 +49,12 @@ namespace Giacom.Cdr.IntegrationTests
         [InlineData("C1", 1000000, 10000)]
         public async Task QueryByCaller_CorrectResult(string? caller, int? take, int expetedRecordCount)
         {
-            // act
-            var result = await CallDetailsClient!.CallDetailsAsync(caller, take);
+            // act - querying pre-ingested data
+            var result = await CallDetailsClient!.GetByCallerAsync(caller, take);
 
             // assert
             result.Should().HaveCount(expetedRecordCount);
         }
-
   
         public async Task InitializeAsync()
         {
@@ -72,12 +67,6 @@ namespace Giacom.Cdr.IntegrationTests
         public Task DisposeAsync()
         {
             return Task.CompletedTask;
-        }
-
-        private static FileStream ToStream(string fileName)
-        {
-            // arrange
-            return new FileStream("./TestData/" + fileName, FileMode.Open, FileAccess.Read);
         }
     }
 }

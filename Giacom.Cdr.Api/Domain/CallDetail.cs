@@ -11,6 +11,4 @@
         decimal? Cost,
         string? Currency
     );
-
-
 }

@@ -1,7 +1,8 @@
-using CsvHelper;
 using System.Globalization;
+using CsvHelper;
 using Mapster;
 using FluentAssertions;
+
 using Giacom.Cdr.Domain;
 using Giacom.Cdr.Application.CSV;
 
@@ -9,30 +10,30 @@ namespace Giacom.Cdr.UnitTests
 {
     public class CsvSplitterTests
     {
-
-        [Fact]
-        public void SplitCsv5GB_Duration()
+        [Fact(Skip = "Pre-generated files are not part of repository")]
+        public void SplitCsv5GB_DurationCheck()
         {
-            using FileStream stream = new FileStream("C:\\!Code\\!Giacom\\Giacom\\Giacom.Cdr.IntegrationTests\\TestData\\cdr_test_data_5GB.csv", FileMode.Open, FileAccess.Read);
+            using FileStream stream = new FileStream(".\\TestData\\cdr_test_data_5GB.csv", FileMode.Open, FileAccess.Read);
             var tempFiles = CsvSplitter.SplitCsvToTempFiles(stream, "split");
         }
 
-
-
-        [Fact]
-        public void SplitCsvFile_HasCorrectStructure()
+        [Theory]
+        [InlineData(1, 1000, 1)]
+        [InlineData(10001, 1000, 11)]
+        public void SplitCsvFile_HasCorrectStructure(int recordCount, int maxRecordCount, int expectedFileCount)
         {
             TypeAdapterConfig.GlobalSettings.MapModels();
 
             // arrange: generate a CSV file with data rows (plus header)
-            int expectedRecordCount = 10000;
-            var tempFile = GenerateTemporaryCsvFile(expectedRecordCount);
+            var tempFile = GenerateTemporaryCsvFile(recordCount);
             using FileStream stream = new FileStream(tempFile, FileMode.Open, FileAccess.Read);
 
             // act: split the CSV file into temporary files
-            var tempFiles = CsvSplitter.SplitCsvToTempFiles(stream, "testsplit", 1000);
+            var tempFiles = CsvSplitter.SplitCsvToTempFiles(stream, "testsplit", maxRecordCount);
+
+            // assert: Check that the number of temporary files created matches the expected count
             tempFiles.Should().NotBeNull();
-            tempFiles.Count.Should().BeGreaterThan(1);
+            tempFiles.Should().HaveCount(expectedFileCount);
 
             // assert: Use CsvHelper to read each temp file and sum the total number of records
             int totalRecords = 0;
@@ -46,8 +47,8 @@ namespace Giacom.Cdr.UnitTests
                 totalRecords += records.Count;
             }
 
-            // Verify that the total number of data records equals the expected record count (not counting header rows)
-            totalRecords.Should().Be(expectedRecordCount);
+            //  assert: Check that the total number of records across all temp files matches the original record count
+            totalRecords.Should().Be(recordCount);
         }
 
         public static string GenerateTemporaryCsvFile(long rowCount, string? caller = null)

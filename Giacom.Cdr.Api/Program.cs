@@ -1,10 +1,10 @@
 using System.Reflection;
 using Mapster;
 using Serilog;
+using MediatR;
+
 using Giacom.Cdr.Domain;
 using Giacom.Cdr.Application;
-using MediatR;
-using static Kusto.Data.Security.WellKnownAadResourceIds;
 using Giacom.Cdr.Application.Mediator;
 
 
@@ -47,6 +47,7 @@ namespace Giacom.Cdr.Api
 
             app.MapControllers();
 
+            // Mapster configuration
             TypeAdapterConfig.GlobalSettings.MapModels();
         }
     }

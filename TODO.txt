@@ -1,19 +1,8 @@
 TODO: 
 
-deduplication - query - https://learn.microsoft.com/en-us/azure/data-explorer/dealing-with-duplicates
-
-
-Benchmarking
-
-
-add commenty a XML commenty codu copilotem
+remove SplitCsv5GB_DurationCheck()
 
 cekat na agregaci?
-NewRelic
-
-repository pattern
-
-get failures - https://learn.microsoft.com/en-us/kusto/api/netfx/kusto-ingest-client-examples?view=azure-data-explorer&preserve-view=true#ingest-from-local-files-and-validate-ingestion
 
 
 

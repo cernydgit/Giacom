@@ -129,18 +129,18 @@ namespace Giacom.Cdr.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CallDetailDto>> CallDetailsAsync(string? caller, int? take)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CallDetailDto>> GetByCallerAsync(string? caller, int? take)
         {
-            return CallDetailsAsync(caller, take, System.Threading.CancellationToken.None);
+            return GetByCallerAsync(caller, take, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CallDetailDto>> CallDetailsAsync(string? caller, int? take, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CallDetailDto>> GetByCallerAsync(string? caller, int? take, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/CallDetails?");
+            urlBuilder_.Append("api/CallDetails/getByCaller?");
             if (caller != null)
             {
                 urlBuilder_.Append(System.Uri.EscapeDataString("caller") + "=").Append(System.Uri.EscapeDataString(ConvertToString(caller, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
