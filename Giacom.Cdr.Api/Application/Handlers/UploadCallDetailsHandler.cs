@@ -2,7 +2,7 @@
 using MediatR;
 using Kusto.Data.Common;
 using Kusto.Ingest;
-using Giacom.Cdr.Application.CSV;
+
 
 
 namespace Giacom.Cdr.Application.Handlers
@@ -19,15 +19,19 @@ namespace Giacom.Cdr.Application.Handlers
     /// </summary>
     public class UploadCallDetailsHandler : IRequestHandler<UploadCallDetailsRequest>
     {
+        private readonly ISender sender;
         private readonly IOptions<CallDetailsOptions> options;
+        private readonly ILogger<UploadCallDetailsHandler> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UploadCallDetailsHandler"/> class.
         /// </summary>
         /// <param name="options">The configuration options for handling call details ingestion.</param>
-        public UploadCallDetailsHandler(IOptions<CallDetailsOptions> options)
+        public UploadCallDetailsHandler(ISender sender, IOptions<CallDetailsOptions> options, ILogger<UploadCallDetailsHandler> logger)
         {
+            this.sender = sender;
             this.options = options;
+            this.logger = logger;
         }
 
         /// <summary>
@@ -42,38 +46,44 @@ namespace Giacom.Cdr.Application.Handlers
             var opts = options.Value;
 
             // Split the input CSV stream into multiple temporary files for ingestion.
-            var tempFiles = CsvSplitter.SplitCsvToTempFiles(command.Stream, command.FileName);
+            var tempFiles = await sender.Send(new SplitCallDetailsCsvRequest(command.Stream, command.FileName, opts.IngestMaxLines), cancellationToken);
 
             // Process each temporary file in parallel using the configured parallel options.
             await Parallel.ForEachAsync(tempFiles, opts.IngestParallelOptions, async (path, ct) =>
             {
+                logger.LogInformation("Ingesting file {FileName}", path);
+
                 var ingestClient = KustoIngestFactory.CreateQueuedIngestClient(
                     opts.IngestConnectionString,
                     new QueueOptions { MaxRetries = opts.IngestMaxRetries });
 
                 using (ingestClient)
                 {
-                    foreach (var tempFile in tempFiles)
+                    // Generate a unique file ID based on the file name - used deduplication
+                    var fileId = Path.GetFileName(path);
+
+                    // Open the temporary file as a stream for ingestion.
+                    using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
+
+                    var streamSourceOptions = new StreamSourceOptions
                     {
-                        // Generate a unique file ID based on the file name - because of deduplication
-                        var fileId = Path.GetFileName(tempFile);
+                         Compress = true
+                    };
 
-                        // Open the temporary file as a stream for ingestion.
-                        using var stream = new FileStream(tempFile, FileMode.Open, FileAccess.Read);
+                    var ingestionProps = new KustoIngestionProperties(opts.Database, opts.Table)
+                    {
+                        Format = DataSourceFormat.csv,
+                        AdditionalTags = [$"Ingested from {Environment.MachineName}, started at {DateTimeOffset.UtcNow}"], 
+                        IngestByTags = new List<string> { fileId }, // IMPORTANT - Use the file ID as an ingest tag.
+                        IngestIfNotExists = new List<string> { fileId } // IMPORTANT - avoid duplicate ingestion.
+                    };
 
-                        // Define the ingestion properties for the Kusto table.
-                        var ingestionProps = new KustoIngestionProperties(opts.Database, opts.Table)
-                        {
-                            Format = DataSourceFormat.csv,
-                            AdditionalTags = [Path.GetFileName(command.FileName)], // for tracking only
-                            IngestByTags = new List<string> { fileId }, // IMPORTANT - Use the file ID as an ingest tag.
-                            IngestIfNotExists = new List<string> { fileId } // IMPORTANT - avoid duplicate ingestion.
-                        };
-
-                        // Perform the ingestion of the file stream into Kusto - guarateed "at least once" delivery
-                        await ingestClient.IngestFromStreamAsync(stream, ingestionProps);
-                    }
+                    // Perform the ingestion of the file stream into ADX
+                    // guarateed "at least once" delivery
+                    await ingestClient.IngestFromStreamAsync(stream, ingestionProps, streamSourceOptions);
                 }
+
+                logger.LogInformation("Ingested file {FileName}", path);
             });
         }
     }

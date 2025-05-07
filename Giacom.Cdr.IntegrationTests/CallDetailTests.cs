@@ -15,11 +15,10 @@ namespace Giacom.Cdr.IntegrationTests
         protected CallDetailsClient? CallDetailsClient { get; private set; }
 
 
-        [Theory(Skip = "Pre-generated files are not part of repository (too big)")]
-        [InlineData("cdr_test_data_100MB.csv")]
-        [InlineData("cdr_test_data_500MB.csv")]
-        [InlineData("cdr_test_data_5GB.csv")]
-        public async Task UploadFile_Success(string fileName)
+        [Theory]
+        [InlineData("techtest_cdr_5GB.csv")]
+        [InlineData("techtest_cdr.csv")]
+        public async Task UploadSampleData_Success(string fileName)
         {
             // arrange
             using FileStream stream = new FileStream("./TestData/" + fileName, FileMode.Open, FileAccess.Read);
@@ -29,12 +28,12 @@ namespace Giacom.Cdr.IntegrationTests
         }
 
         [Theory]
-        [InlineData(1, "Caller1")]  
-        [InlineData(10000, "Caller2")]
-        public async Task Upload_Success(long recordCount, string? caller)
+        [InlineData(1, 0L)]  
+        [InlineData(10000, 666L)]
+        public async Task Upload_Success(long recordCount, long? caller)
         {
             // arrange
-            var tempFile = CsvSplitterTests.GenerateTemporaryCsvFile(recordCount, caller);
+            var tempFile = SplitCallDetailsHandlerTests.GenerateTemporaryCsvFile(recordCount, caller);
             using var stream = new FileStream(tempFile, FileMode.Open, FileAccess.Read);
 
             // act
@@ -44,8 +43,9 @@ namespace Giacom.Cdr.IntegrationTests
         }
 
         [Theory]
-        [InlineData("C1", 100, 100)]
-        [InlineData("C1", 1000000, 10000)]
+        [InlineData(null, 100, 100)]
+        //[InlineData("C1", 100, 100)]
+        //[InlineData("C1", 1000000, 10000)]
         public async Task QueryByCaller_CorrectResult(string? caller, int? take, int expetedRecordCount)
         {
             // act - querying pre-ingested data

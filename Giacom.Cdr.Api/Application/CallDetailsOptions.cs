@@ -38,9 +38,9 @@ namespace Giacom.Cdr.Application
 
         /// <summary>
         /// Gets or sets the maximum number of lines allowed per ingestion batch.
-        /// Default value corresponds to ~500MB of data.
+        /// Default value corresponds to ~100MB of data.
         /// </summary>
-        public long IngestMaxLines { get; set; } = 10000000; 
+        public int IngestMaxLines { get; set; } = 1_000_000; 
 
         /// <summary>
         /// Gets or sets the maximum number of retries allowed for ingestion operations in case of failure.

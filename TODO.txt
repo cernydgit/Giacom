@@ -1,18 +1,12 @@
 TODO: 
 
-remove SplitCsv5GB_DurationCheck()
+REPOSITORY + test, ktery ceka ceka na agregaci
+Upload_Success test - predelat na upload and query   
 
-cekat na agregaci?
+CallDetail to namespace entities
+je nutne DTO? - spis ne
 
-
-
-------------------
-questions:
-
-je date skutecne date?
-chybejici sample data
-reference typ (string, max size?)
-jaky queries se maji zimplementovat? - indexes
+Mapster extension dat do infrastructure k repository
 
 
 solution
@@ -27,6 +21,7 @@ solution
 
 
 extensions
+ - very sensitive on input data - order of columns
  - Solution #3: Use materialized views to deduplicate
  - error handling (spadle ingestion jobs)
  - deduplication

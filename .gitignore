@@ -450,3 +450,4 @@ test/Results/*
 /Giacom.Cdr.IntegrationTests/TestData/cdr_test_data_5GB.csv
 /Giacom.Cdr.IntegrationTests/TestData/cdr_test_data_500MB.csv
 /Giacom.Cdr.IntegrationTests/TestData/cdr_test_data_100MB.csv
+/Giacom.Cdr.IntegrationTests/TestData/techtest_cdr_5GB.csv

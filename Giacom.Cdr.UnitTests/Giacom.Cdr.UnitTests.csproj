@@ -10,10 +10,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\Giacom.Cdr.IntegrationTests\TestData\techtest_cdr.csv" Link="TestData\techtest_cdr.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Giacom.Cdr.IntegrationTests\TestData\techtest_cdr_5GB.csv" Link="TestData\techtest_cdr_5GB.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="FluentAssertions" Version="8.2.0" />
     <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="NBench" Version="2.0.1" />
     <PackageReference Include="NBench.Runner" Version="1.2.2">
       <PrivateAssets>all</PrivateAssets>
@@ -30,6 +40,10 @@
 
   <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TestData\" />
   </ItemGroup>
 
 </Project>

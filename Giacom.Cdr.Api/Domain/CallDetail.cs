@@ -3,12 +3,11 @@
     public record CallDetail
     (
         string Reference,
-        string? Caller,
-        string? Recipient,
-        DateTime? StartDateTime,
-        DateTime? EndDateTime,
-        int? Duration,
-        decimal? Cost,
+        long? Caller,
+        long? Recipient,
+        DateTime? CallEndDateTime,
+        int? DurationSec,
+        float? Cost,
         string? Currency
     );
 }

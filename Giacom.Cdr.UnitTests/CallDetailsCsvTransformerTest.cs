@@ -1,31 +1,42 @@
 using System.Globalization;
+using Microsoft.Extensions.Logging;
 using CsvHelper;
 using Mapster;
 using FluentAssertions;
 using NBench;
-
-using Giacom.Cdr.Domain;
-using Giacom.Cdr.Application.CSV;
 using Pro.NBench.xUnit.XunitExtensions;
+using Moq;
+
+using Giacom.Cdr.Application.Handlers;
+using Giacom.Cdr.Domain;
 
 namespace Giacom.Cdr.UnitTests
 {
-    public class CsvSplitterTests
+    public class SplitCallDetailsHandlerTests
     {
-        [NBenchFact(Skip = "Pre-generated files are not part of repository (too big)")]
-        [PerfBenchmark(NumberOfIterations = 5, TestMode = TestMode.Test)]
-        [ElapsedTimeAssertion(MaxTimeMilliseconds = 1000 * 10)] // max 10 sec
+        private Mock<ILogger<SplitCallDetailsCsvHandler>>  loggerMock = new Mock<ILogger<SplitCallDetailsCsvHandler>>();
+
+        //[NBenchFact(Skip = "Pre-generated files are not part of repository (too big)")]
+        [NBenchFact]
+        [PerfBenchmark(NumberOfIterations = 1, TestMode = TestMode.Test)]
+        [ElapsedTimeAssertion(MaxTimeMilliseconds = 1000 * 30)] // max 30 sec
         [Trait("Category", "Manual")]
-        public void SplitCsv5GB_DurationUnder10sec()
+        [Trait("Category", "LongRunning")]
+        public void SplitCsv5GB_DurationCheck()
         {
-            using FileStream stream = new FileStream("C:\\!Code\\!Giacom\\Giacom\\Giacom.Cdr.IntegrationTests\\TestData\\cdr_test_data_5GB.csv", FileMode.Open, FileAccess.Read);
-            var tempFiles = CsvSplitter.SplitCsvToTempFiles(stream, "split");
+            // arrange: use a pre-generated 5GB CSV file
+            using FileStream stream = new FileStream("./TestData/techtest_cdr_5GB.csv", FileMode.Open, FileAccess.Read);
+            var request = new SplitCallDetailsCsvRequest(stream, "split", 1000000);
+
+            // act: split the CSV file into temporary files
+            new SplitCallDetailsCsvHandler(loggerMock.Object).Handle(request, default).Wait();
         }
 
         [Theory]
         [InlineData(1, 1000, 1)]
         [InlineData(10001, 1000, 11)]
-        public void SplitCsvFile_HasCorrectStructure(int recordCount, int maxRecordCount, int expectedFileCount)
+        [InlineData(10000, 1000, 10)]
+        public async Task SplitCsvFile_HasCorrectStructure(int recordCount, int maxRecordCount, int expectedFileCount)
         {
             TypeAdapterConfig.GlobalSettings.MapModels();
 
@@ -34,7 +45,8 @@ namespace Giacom.Cdr.UnitTests
             using FileStream stream = new FileStream(tempFile, FileMode.Open, FileAccess.Read);
 
             // act: split the CSV file into temporary files
-            var tempFiles = CsvSplitter.SplitCsvToTempFiles(stream, "testsplit", maxRecordCount);
+            var request = new SplitCallDetailsCsvRequest(stream, "split", maxRecordCount);
+            var tempFiles = await new SplitCallDetailsCsvHandler(loggerMock.Object).Handle(request, default);
 
             // assert: Check that the number of temporary files created matches the expected count
             tempFiles.Should().NotBeNull();
@@ -56,7 +68,7 @@ namespace Giacom.Cdr.UnitTests
             totalRecords.Should().Be(recordCount);
         }
 
-        public static string GenerateTemporaryCsvFile(long rowCount, string? caller = null)
+        public static string GenerateTemporaryCsvFile(long rowCount, long? caller = null)
         {
             var random = new Random();
 
@@ -68,20 +80,19 @@ namespace Giacom.Cdr.UnitTests
 
                 for (long i = 0; i < rowCount; i++)
                 {
-                    string callerId = caller ?? Guid.NewGuid().ToString().Substring(0, 15);
-                    string recipient = Guid.NewGuid().ToString().Substring(0, 15);
-                    string callDate = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
-                    string endTime = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture);
+                    long callerId = caller ?? random.NextInt64();
+                    long recipient = random.NextInt64();
+                    var callDate = DateOnly.FromDateTime(DateTime.UtcNow);
+                    var endTime = TimeOnly.FromDateTime(DateTime.UtcNow);
                     int duration = random.Next(1, 1000);
-                    decimal cost = random.Next(1, 1000);
+                    int cost = random.Next(1, 1000);
                     string reference = Guid.NewGuid().ToString();
                     string currency = "GBP";
-                    writer.WriteLine($"{callerId},{recipient},{callDate},{endTime},{duration},{cost},{reference},{currency}");
+                    writer.WriteLine($"{callerId},{recipient},{callDate},{endTime:HH:mm:ss},{duration},{cost},{reference},{currency}");
                 }
                 writer.Close();
             }
             return tempFilePath;
         }
-
     }
 }

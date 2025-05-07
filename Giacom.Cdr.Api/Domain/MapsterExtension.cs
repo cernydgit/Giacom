@@ -30,8 +30,7 @@ namespace Giacom.Cdr.Domain
             // Retrieve the column ordinal positions for each required field.
             int idxCaller = reader.GetOrdinal("caller_id");
             int idxRecipient = reader.GetOrdinal("recipient");
-            int idxCallDate = reader.GetOrdinal("call_date");
-            int idxEndTime = reader.GetOrdinal("end_time");
+            int idxCallEndDateTime = reader.GetOrdinal("call_end_datetime");
             int idxDuration = reader.GetOrdinal("duration");
             int idxCost = reader.GetOrdinal("cost");
             int idxReference = reader.GetOrdinal("reference");
@@ -40,15 +39,13 @@ namespace Giacom.Cdr.Domain
             // Loop through each record in the data reader.
             while (reader.Read())
             {
-                // Create a new CallDetail object mapping each field,
-                // checking for DBNull values and converting as needed.
+                // Create a new CallDetail object mapping each field, checking for DBNull values and converting as needed.
                 var callDetail = new CallDetail(
-                    Caller: reader.IsDBNull(idxCaller) ? null : reader.GetString(idxCaller),
-                    Recipient: reader.IsDBNull(idxRecipient) ? null : reader.GetString(idxRecipient),
-                    StartDateTime: reader.IsDBNull(idxCallDate) ? null : reader.GetDateTime(idxCallDate),
-                    EndDateTime: reader.IsDBNull(idxEndTime) ? null : reader.GetDateTime(idxEndTime),
-                    Duration: reader.IsDBNull(idxDuration) ? null : Convert.ToInt32(reader.GetInt64(idxDuration)),
-                    Cost: reader.IsDBNull(idxCost) ? null : Convert.ToDecimal(reader.GetDouble(idxCost)),
+                    Caller: reader.IsDBNull(idxCaller) ? null : reader.GetInt64(idxCaller),
+                    Recipient: reader.IsDBNull(idxRecipient) ? null : reader.GetInt64(idxRecipient),
+                    CallEndDateTime: reader.IsDBNull(idxCallEndDateTime) ? null : reader.GetDateTime(idxCallEndDateTime),
+                    DurationSec: reader.IsDBNull(idxDuration) ? null : Convert.ToInt32(reader.GetInt32(idxDuration)),
+                    Cost: reader.IsDBNull(idxCost) ? null : Convert.ToSingle(reader.GetDouble(idxCost)),
                     Reference: reader.IsDBNull(idxReference) ? string.Empty : reader.GetString(idxReference),
                     Currency: reader.IsDBNull(idxCurrency) ? null : reader.GetString(idxCurrency)
                 );

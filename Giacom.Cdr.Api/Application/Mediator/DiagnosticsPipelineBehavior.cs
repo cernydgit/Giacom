@@ -32,7 +32,7 @@ namespace Giacom.Cdr.Application.Mediator
         /// <exception cref="Exception">Throws any exception that occurs during request handling.</exception>
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            logger.LogInformation("Starting MediatR request: {Request}", typeof(TRequest).Name);
+            logger.LogInformation("Starting MediatR request: {Request}", request);
             var stopwatch = new Stopwatch();
             try
             {
@@ -41,13 +41,13 @@ namespace Giacom.Cdr.Application.Mediator
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, "Error executing MediatR request: {Request}", typeof(TRequest).Name);
+                logger.LogError(ex, "Error executing MediatR request: {Request}:\n{Exception}", request, ex);
                 throw;
             }
             finally
             {
                 stopwatch.Stop();
-                logger.LogInformation("Finished MediatR request: {Request} in {ElapsedMilliseconds} ms", typeof(TRequest).Name, stopwatch.Elapsed.TotalMilliseconds);
+                logger.LogInformation("Finished MediatR request: {Request} in {ElapsedMilliseconds} ms", request, stopwatch.Elapsed.TotalMilliseconds);
             }
         }
     }
