@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Giacom.Cdr.Application.Handlers;
-using Giacom.Cdr.Domain;
+using Giacom.Cdr.Domain.Entities;
 
 
 namespace Giacom.Cdr.WebAPI.Controllers
@@ -52,7 +52,7 @@ namespace Giacom.Cdr.WebAPI.Controllers
         /// <param name="take">The maximum number of records to return. If null, no limit is applied.</param>
         /// <returns>A collection of <see cref="CallDetail"/> objects representing the call details.</returns>
         [HttpGet("getByCaller")]
-        public Task<IEnumerable<CallDetail>> GetByCaller([FromQuery] string? caller, [FromQuery] int? take)
+        public Task<IEnumerable<CallDetail>> GetByCaller([FromQuery] long? caller, [FromQuery] int? take)
         {
             return sender.Send(new QueryCallDetailsRequest(caller, take));
         }

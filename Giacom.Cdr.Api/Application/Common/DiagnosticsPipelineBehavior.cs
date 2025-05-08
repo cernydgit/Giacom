@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System.Diagnostics;
 
-namespace Giacom.Cdr.Application.Mediator
+namespace Giacom.Cdr.Application.Common
 {
     /// <summary>
     /// A pipeline behavior for MediatR that logs the execution time and errors of requests.
@@ -51,6 +51,4 @@ namespace Giacom.Cdr.Application.Mediator
             }
         }
     }
-
-
 }

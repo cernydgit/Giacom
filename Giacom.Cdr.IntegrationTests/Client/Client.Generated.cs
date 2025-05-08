@@ -129,7 +129,7 @@ namespace Giacom.Cdr.Client
 
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CallDetailDto>> GetByCallerAsync(string? caller, int? take)
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CallDetail>> GetByCallerAsync(long? caller, int? take)
         {
             return GetByCallerAsync(caller, take, System.Threading.CancellationToken.None);
         }
@@ -137,7 +137,7 @@ namespace Giacom.Cdr.Client
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>OK</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CallDetailDto>> GetByCallerAsync(string? caller, int? take, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<CallDetail>> GetByCallerAsync(long? caller, int? take, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/CallDetails/getByCaller?");
@@ -183,7 +183,7 @@ namespace Giacom.Cdr.Client
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<CallDetailDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<CallDetail>>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -314,22 +314,28 @@ namespace Giacom.Cdr.Client
     }
 
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.16.1.0 (NJsonSchema v10.7.2.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class CallDetailDto
+    public partial class CallDetail
     {
+        [Newtonsoft.Json.JsonProperty("reference", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Reference { get; set; } = default!;
+
         [Newtonsoft.Json.JsonProperty("caller", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Caller { get; set; } = default!;
+        public long? Caller { get; set; } = default!;
 
         [Newtonsoft.Json.JsonProperty("recipient", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string? Recipient { get; set; } = default!;
+        public long? Recipient { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("startDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTime? StartDateTime { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("callEndDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public System.DateTime? CallEndDateTime { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("endDateTime", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public System.DateTime? EndDateTime { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("durationSec", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public int? DurationSec { get; set; } = default!;
 
-        [Newtonsoft.Json.JsonProperty("duration", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public int? Duration { get; set; } = default!;
+        [Newtonsoft.Json.JsonProperty("cost", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public float? Cost { get; set; } = default!;
+
+        [Newtonsoft.Json.JsonProperty("currency", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string? Currency { get; set; } = default!;
 
     }
 

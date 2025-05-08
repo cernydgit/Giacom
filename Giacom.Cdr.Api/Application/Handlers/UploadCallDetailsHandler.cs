@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MediatR;
-using Kusto.Data.Common;
-using Kusto.Ingest;
+using Giacom.Cdr.Domain.Contracts.Repository;
+using Giacom.Cdr.Application.Common;
 
 
 
@@ -19,19 +19,23 @@ namespace Giacom.Cdr.Application.Handlers
     /// </summary>
     public class UploadCallDetailsHandler : IRequestHandler<UploadCallDetailsRequest>
     {
+        private readonly IFactory<ICallDetailRepository> repositoryFactory;
         private readonly ISender sender;
         private readonly IOptions<CallDetailsOptions> options;
-        private readonly ILogger<UploadCallDetailsHandler> logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UploadCallDetailsHandler"/> class.
         /// </summary>
         /// <param name="options">The configuration options for handling call details ingestion.</param>
-        public UploadCallDetailsHandler(ISender sender, IOptions<CallDetailsOptions> options, ILogger<UploadCallDetailsHandler> logger)
+        public UploadCallDetailsHandler(
+            IFactory<ICallDetailRepository> repositoryFactory, 
+            ISender sender, 
+            IOptions<CallDetailsOptions> options)
+
         {
+            this.repositoryFactory = repositoryFactory;
             this.sender = sender;
             this.options = options;
-            this.logger = logger;
         }
 
         /// <summary>
@@ -43,47 +47,21 @@ namespace Giacom.Cdr.Application.Handlers
         /// <exception cref="Exception">Throws if an error occurs during ingestion.</exception>
         public async Task Handle(UploadCallDetailsRequest command, CancellationToken cancellationToken)
         {
-            var opts = options.Value;
-
             // Split the input CSV stream into multiple temporary files for ingestion.
-            var tempFiles = await sender.Send(new SplitCallDetailsCsvRequest(command.Stream, command.FileName, opts.IngestMaxLines), cancellationToken);
+            var tempFiles = await sender.Send(
+                new SplitCallDetailsCsvRequest(command.Stream, Path.GetFileNameWithoutExtension(command.FileName), options.Value.IngestMaxLines),
+                cancellationToken);
 
-            // Process each temporary file in parallel using the configured parallel options.
-            await Parallel.ForEachAsync(tempFiles, opts.IngestParallelOptions, async (path, ct) =>
+            await Parallel.ForEachAsync(tempFiles, options.Value.IngestParallelOptions, async (path, ct) =>
             {
-                logger.LogInformation("Ingesting file {FileName}", path);
+                using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
 
-                var ingestClient = KustoIngestFactory.CreateQueuedIngestClient(
-                    opts.IngestConnectionString,
-                    new QueueOptions { MaxRetries = opts.IngestMaxRetries });
+                // Generate a unique file ID based on the file name - used for deduplication
+                var fileId = Path.GetFileName(path);
 
-                using (ingestClient)
-                {
-                    // Generate a unique file ID based on the file name - used deduplication
-                    var fileId = Path.GetFileName(path);
-
-                    // Open the temporary file as a stream for ingestion.
-                    using var stream = new FileStream(path, FileMode.Open, FileAccess.Read);
-
-                    var streamSourceOptions = new StreamSourceOptions
-                    {
-                         Compress = true
-                    };
-
-                    var ingestionProps = new KustoIngestionProperties(opts.Database, opts.Table)
-                    {
-                        Format = DataSourceFormat.csv,
-                        AdditionalTags = [$"Ingested from {Environment.MachineName}, started at {DateTimeOffset.UtcNow}"], 
-                        IngestByTags = new List<string> { fileId }, // IMPORTANT - Use the file ID as an ingest tag.
-                        IngestIfNotExists = new List<string> { fileId } // IMPORTANT - avoid duplicate ingestion.
-                    };
-
-                    // Perform the ingestion of the file stream into ADX
-                    // guarateed "at least once" delivery
-                    await ingestClient.IngestFromStreamAsync(stream, ingestionProps, streamSourceOptions);
-                }
-
-                logger.LogInformation("Ingested file {FileName}", path);
+                // Ingest the file stream using the repository
+                // factory pattern used becouse of thread-safety of repository implementation is unknown
+                await repositoryFactory.Create().IngestAsync(stream, fileId);
             });
         }
     }

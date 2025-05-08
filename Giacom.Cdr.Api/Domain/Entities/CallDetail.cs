@@ -1,4 +1,4 @@
-﻿namespace Giacom.Cdr.Domain
+﻿namespace Giacom.Cdr.Domain.Entities
 {
     public record CallDetail
     (

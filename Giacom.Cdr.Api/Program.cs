@@ -5,7 +5,8 @@ using MediatR;
 
 using Giacom.Cdr.Domain;
 using Giacom.Cdr.Application;
-using Giacom.Cdr.Application.Mediator;
+using Giacom.Cdr.Application.Common;
+using Giacom.Cdr.Infrastructure.Repository;
 
 
 
@@ -35,6 +36,7 @@ namespace Giacom.Cdr.Api
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DiagnosticsPipelineBehavior<,>));
             builder.Services.Configure<CallDetailsOptions>(options => builder.Configuration.Bind("CallDetailOptions", options));
+            builder.Services.AddAdxClassDetailRepository(builder.Configuration);
         }
 
         private static void Configure(WebApplication app)

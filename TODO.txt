@@ -1,16 +1,13 @@
 TODO: 
 
-REPOSITORY + test, ktery ceka ceka na agregaci
-Upload_Success test - predelat na upload and query   
+CallDetails3
+odstranit encoding?
 
-CallDetail to namespace entities
-je nutne DTO? - spis ne
-
-Mapster extension dat do infrastructure k repository
-
+Mapster extension dat do infrastructure k repository ? nebo prejmenovat na domain extensions?
 
 solution
  - deplication
+ - nasty trick for transformation
  - testy jsou data dependet
  - Buffering - protoze frekvence uploadu je nizka
  - distributed env (nemuzeme ukladat lokalne)
@@ -21,6 +18,7 @@ solution
 
 
 extensions
+ - testy jsou data dependet
  - very sensitive on input data - order of columns
  - Solution #3: Use materialized views to deduplicate
  - error handling (spadle ingestion jobs)

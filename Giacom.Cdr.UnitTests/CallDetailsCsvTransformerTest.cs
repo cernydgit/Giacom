@@ -9,6 +9,7 @@ using Moq;
 
 using Giacom.Cdr.Application.Handlers;
 using Giacom.Cdr.Domain;
+using System.IO;
 
 namespace Giacom.Cdr.UnitTests
 {
@@ -22,7 +23,7 @@ namespace Giacom.Cdr.UnitTests
         [ElapsedTimeAssertion(MaxTimeMilliseconds = 1000 * 30)] // max 30 sec
         [Trait("Category", "Manual")]
         [Trait("Category", "LongRunning")]
-        public void SplitCsv5GB_DurationCheck()
+        public void SplitCsvFile_CsvHasSize5GB_DurationCheck()
         {
             // arrange: use a pre-generated 5GB CSV file
             using FileStream stream = new FileStream("./TestData/techtest_cdr_5GB.csv", FileMode.Open, FileAccess.Read);
@@ -36,7 +37,7 @@ namespace Giacom.Cdr.UnitTests
         [InlineData(1, 1000, 1)]
         [InlineData(10001, 1000, 11)]
         [InlineData(10000, 1000, 10)]
-        public async Task SplitCsvFile_HasCorrectStructure(int recordCount, int maxRecordCount, int expectedFileCount)
+        public async Task SplitCsvFile_CsvHasCorrectFormat_ResultHasCorrectStructure(int recordCount, int maxRecordCount, int expectedFileCount)
         {
             TypeAdapterConfig.GlobalSettings.MapModels();
 
@@ -67,6 +68,27 @@ namespace Giacom.Cdr.UnitTests
             //  assert: Check that the total number of records across all temp files matches the original record count
             totalRecords.Should().Be(recordCount);
         }
+
+        [Theory]
+        [InlineData("I am invalid format")]
+        [InlineData("caller_id,recipient,call_date,end_time,duration,cost,currency,reference")]
+        [InlineData("Caller_id,Recipient,call_date,end_time,duration,cost,reference,currency")]
+        public async Task SplitCsvFile_CsvHasIncorrectFormat_Throws(string header)
+        {
+            // arrange: create a temporary CSV file with an incorrect header
+            string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            File.WriteAllText(tempFile, header);
+            using FileStream stream = new FileStream(tempFile, FileMode.Open, FileAccess.Read);
+
+            // act + assert: attempt to split the CSV file into temporary files
+            var request = new SplitCallDetailsCsvRequest(stream, "split", 100);
+
+            var exception = await Assert.ThrowsAsync<InvalidDataException>(async () =>
+            {
+                await new SplitCallDetailsCsvHandler(loggerMock.Object).Handle(request, default);
+            });
+        }
+
 
         public static string GenerateTemporaryCsvFile(long rowCount, long? caller = null)
         {

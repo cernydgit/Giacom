@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Giacom.Cdr.Domain.Entities;
 using Mapster;
 
 namespace Giacom.Cdr.Domain
