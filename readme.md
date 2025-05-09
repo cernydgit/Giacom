@@ -34,7 +34,7 @@ currency: string
 ) 
    ```
 
-Current config points to preconfigured ADX cluster available for testing. You should be able to run majority of integration tests in the solution, except tests, that require large pre-generated input .csv files.
+Current config points to preconfigured ADX cluster available for testing. You should be able to run majority of integration tests in the solution, except tests, that require large pre-generated input .csv files (these csv files are not part of repo).
 
 ## Project Structure
 
@@ -42,7 +42,7 @@ Current config points to preconfigured ADX cluster available for testing. You sh
 
 * **Domain**: Defines the `CallDetail` entity.
 
-* **Application**: Implements use cases (upload, split, query) and their options in `CallDetailsOptions`
+* **Application**: Implements use cases (split, upload, query) and their options in `CallDetailsOptions`
 
 * **WebAPI**: Exposes upload and query endpoints. Although the requirements didn't specify any read operations, I added a query endpoint to allow verifying that the data was successfully uploaded. In a real scenario, the read API would likely be separated into its own service.
 
