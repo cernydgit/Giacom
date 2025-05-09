@@ -41,18 +41,18 @@ Current config points to preconfigured ADX cluster available for testing. You sh
 
 * The project is divided into four main traditional namespaces following clean architecture principles: Domain, Application, WebAPI, and Infrastructure. All layers remain in a one project, with dependencies only pointing inward. Splitting into separate projects per layer seems to me like overkill in this simple case.&#x20;
 
-* **Domain**: Defines the `CallDetail` entity.
+* **Domain**: Defines the [CallDetail](Giacom.Cdr.Api/Domain/Entities/CallDetail.cs) entity.
 
-* **Application**: Implements use cases (split, upload, query) and their options in `CallDetailsOptions`
+* **Application**: Implements use cases [SplitCallDetailsCsvHandler](Giacom.Cdr.Api/Application/Handlers/SplitCallDetailsCsvHandler.cs), [UploadCallDetailsHandler](Giacom.Cdr.Api/Application/Handlers/UploadCallDetailsHandler.cs),  [QueryCallDetailsHandler](Giacom.Cdr.Api/Application/Handlers/QueryCallDetailsHandler.cs) and their options in (CallDetailsOptions)[Giacom.Cdr.Api/Application/CallDetailsOptions.cs]
 
-* **WebAPI**: Exposes upload and query endpoints. Although the requirements didn't specify any read operations, I added a query endpoint to allow verifying that the data was successfully uploaded. In a real scenario, the read API would likely be separated into its own service.
+* **WebAPI**: Exposes [upload](Giacom.Cdr.Api/WebAPI/Controllers/CallDetailsController.cs#L39) and [query](Giacom.Cdr.Api/WebAPI/Controllers/CallDetailsController.cs#L57) endpoints. Although the requirements didn't specify any read operations, I added a query endpoint to allow verifying that the data was successfully uploaded. In a real scenario, the read API would likely be separated into its own service.
 
-* **Infrastructure**:  ADX repository ingestion via `Microsoft.Azure.Kusto.*` libraries and ADX related options 
+* **Infrastructure**:  ADX repository ingestion in [AdxCallDetailRepository](Giacom.Cdr.Api/Infrastructure/Repository/AdxClassDetailRepository.cs) via `Microsoft.Azure.Kusto.*` libraries and ADX related options in [AdxCallDetailRepositoryOptions](Giacom.Cdr.Api/Infrastructure/Repository/AdxCallDetailRepositoryOptions.cs)
 
 **Additional details:**
 
 * In-process messaging uses the **Wolverine** library (more ambitious and minimal boilerplate compared to **MediatR**).
-* Mapping is done with **Mapster** for performance and flexibility (faster and more extensible than AutoMapper).
+* Mapping is done with **Mapster** for performance and flexibility (faster and more extensible than **AutoMapper**).
 * Basic diagnostics are provided by `DiagnosticsMiddleware`.
 
 ## Tests
@@ -62,6 +62,7 @@ Current config points to preconfigured ADX cluster available for testing. You sh
   * Verify uploading of pre-generated data (for large volume tests).
   * Verify querying of pre-ingested data.
   * Verify uploading of runtime-generated data with subsequent verification of the correct structure of inserted data via the query endpoint.
+  * Some tests use fake implementation of CDR repository - [FakeCallDetailReposiory][(Giacom.Cdr.IntegrationTests/FakeCallDetailRepository.cs)
 * **Unit Tests**:
 
   * Validate CSV splitting and validation logic
