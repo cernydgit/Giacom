@@ -22,16 +22,17 @@ The fundamental design decision is the choice of persistent storage. A Call Deta
    * ADX settings (connection strings, retry policies, etc.) are specified in `AdxCallDetailRepositoryOptions`.
    * Solution assumes the existence of a Kusto table with the following structure:
 
+
    ```kusto
-.create table CallDetails (
-caller_id: long, 
-recipient: long, 
-call_end_datetime: datetime, 
-duration: int, 
-cost: real, 
-reference: string, 
-currency: string
-) 
+   .create table CallDetails (
+   caller_id: long, 
+   recipient: long, 
+   call_end_datetime: datetime, 
+   duration: int, 
+   cost: real, 
+   reference: string, 
+   currency: string
+   )
    ```
 
 Current config points to preconfigured ADX cluster available for testing. You should be able to run majority of integration tests in the solution, except tests, that require large pre-generated input .csv files (these csv files are not part of repo).
