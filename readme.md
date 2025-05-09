@@ -6,7 +6,7 @@ The fundamental design decision is the choice of persistent storage. A Call Deta
 
 1. **Chunked CSV Ingestion**
 
-   * The input CSV file is split into smaller chunks with the same schema.
+   * The input CSV file is split into smaller chunks.
    * Each chunk is compressed and sent in parallel to ADX using queued ingest, eliminating the need for custom retry logic.
    * Memory usage remains approximately 350 MB regardless of input file size.
    * CSV chunk size and parallelism are configurable via `CallDetailsOptions`.
