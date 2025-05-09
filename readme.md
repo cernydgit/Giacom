@@ -62,7 +62,7 @@ Current config points to preconfigured ADX cluster available for testing. You sh
   * Verify uploading of pre-generated data (for large volume tests).
   * Verify querying of pre-ingested data.
   * Verify uploading of runtime-generated data with subsequent verification of the correct structure of inserted data via the query endpoint.
-  * Some tests use fake implementation of CDR repository - [FakeCallDetailReposiory][(Giacom.Cdr.IntegrationTests/FakeCallDetailRepository.cs)
+  * Some tests use fake implementation of CDR repository - [FakeCallDetailReposiory](Giacom.Cdr.IntegrationTests/FakeCallDetailRepository.cs)
 * **Unit Tests**:
 
   * Validate CSV splitting and validation logic
