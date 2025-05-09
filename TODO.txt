@@ -1,8 +1,6 @@
 TODO: 
 
 CallDetails3
-odstranit encoding?
-
 Mapster extension dat do infrastructure k repository ? nebo prejmenovat na domain extensions?
 
 solution

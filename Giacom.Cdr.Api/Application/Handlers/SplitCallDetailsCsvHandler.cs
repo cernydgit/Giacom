@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using MediatR;
+
 
 namespace Giacom.Cdr.Application.Handlers
 {
@@ -13,7 +13,7 @@ namespace Giacom.Cdr.Application.Handlers
     /// <param name="FileNamePrefix">Optional prefix for temporary file names.</param>
     /// <param name="MaxRows">Maximum number of data rows per chunk.</param>
     /// <param name="RawEncoding">The text encoding of the CSV, defaults to UTF8 if not provided.</param>
-    public record SplitCallDetailsCsvRequest(Stream Input, string FileNamePrefix, int MaxRows, Encoding? RawEncoding = null) : IRequest<IEnumerable<string>>
+    public record SplitCallDetailsCsvRequest(Stream Input, string FileNamePrefix, int MaxRows, Encoding? RawEncoding = null)
     {
         public Encoding Encoding => RawEncoding ?? Encoding.UTF8;
     }
@@ -21,7 +21,7 @@ namespace Giacom.Cdr.Application.Handlers
     /// <summary>
     /// Handler for <see cref="SplitCallDetailsCsvRequest"/>, executing the split and returning the list of temp file paths.
     /// </summary>
-    public sealed class SplitCallDetailsCsvHandler : IRequestHandler<SplitCallDetailsCsvRequest, IEnumerable<string>>
+    public sealed class SplitCallDetailsCsvHandler
     {
         private const string expectedHeader = "caller_id,recipient,call_date,end_time,duration,cost,reference,currency";
         private readonly ILogger<SplitCallDetailsCsvHandler> logger;

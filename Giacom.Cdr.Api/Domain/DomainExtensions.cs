@@ -4,14 +4,14 @@ using Mapster;
 
 namespace Giacom.Cdr.Domain
 {
-    public static class MapsterExtension
+    public static class DomainExtensions
     {
         /// <summary>
         /// Configures the mapping between IDataReader and a list of CallDetail objects.
         /// This allows automatic conversion using Mapster.
         /// </summary>
         /// <param name="config">The Mapster configuration to update.</param>
-        public static void MapModels(this TypeAdapterConfig config)
+        public static void MapCallDetailsModels(this TypeAdapterConfig config)
         {
             config.ForType<IDataReader, List<CallDetail>>()
                   .MapWith(reader => reader.ToCallDetails());

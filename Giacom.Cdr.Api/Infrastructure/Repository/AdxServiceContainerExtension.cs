@@ -1,4 +1,4 @@
-﻿using Giacom.Cdr.Application.Common;
+﻿using Giacom.Cdr.Application.Common.DependencyInjection;
 using Giacom.Cdr.Domain.Contracts;
 using Giacom.Cdr.Domain.Contracts.Repository;
 

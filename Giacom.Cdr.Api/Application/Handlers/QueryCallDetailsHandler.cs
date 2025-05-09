@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
-using Kusto.Data.Net.Client;
-using MediatR;
-using Mapster;
+
 using Giacom.Cdr.Domain.Entities;
 using Giacom.Cdr.Domain.Contracts.Repository;
 
@@ -12,12 +10,12 @@ namespace Giacom.Cdr.Application.Handlers
     /// </summary>
     /// <param name="Caller">The caller ID to filter the results by. If null, no filtering is applied.</param>
     /// <param name="Take">The maximum number of records to return. If null, no limit is applied.</param>
-    public record QueryCallDetailsRequest(long? Caller, int? Take) : IRequest<IEnumerable<CallDetail>> { }
+    public record QueryCallDetailsRequest(long? Caller, int? Take)  { }
 
     /// <summary>
     /// Handles the QueryCallDetailsRequest and retrieves call details from the database.
     /// </summary>
-    public class QueryCallDetailsHandler : IRequestHandler<QueryCallDetailsRequest, IEnumerable<CallDetail>>
+    public class QueryCallDetailsHandler 
     {
         private readonly ICallDetailRepository repository;
 

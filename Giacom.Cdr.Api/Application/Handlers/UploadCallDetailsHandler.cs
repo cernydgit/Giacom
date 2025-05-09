@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
-using MediatR;
+using Wolverine;
+
 using Giacom.Cdr.Domain.Contracts.Repository;
-using Giacom.Cdr.Application.Common;
+using Giacom.Cdr.Application.Common.DependencyInjection;
+
 
 
 
@@ -12,15 +14,15 @@ namespace Giacom.Cdr.Application.Handlers
     /// </summary>
     /// <param name="Stream">The input stream containing the call details in CSV format.</param>
     /// <param name="FileName">The name of the file being uploaded.</param>
-    public record UploadCallDetailsRequest(Stream Stream, string FileName) : IRequest { }
+    public record UploadCallDetailsRequest(Stream Stream, string FileName); 
 
     /// <summary>
     /// Handles the <see cref="UploadCallDetailsRequest"/> to process and ingest call details into Kusto.
     /// </summary>
-    public class UploadCallDetailsHandler : IRequestHandler<UploadCallDetailsRequest>
+    public class UploadCallDetailsHandler 
     {
         private readonly IFactory<ICallDetailRepository> repositoryFactory;
-        private readonly ISender sender;
+        private readonly IMessageBus sender;
         private readonly IOptions<CallDetailsOptions> options;
 
         /// <summary>
@@ -28,8 +30,8 @@ namespace Giacom.Cdr.Application.Handlers
         /// </summary>
         /// <param name="options">The configuration options for handling call details ingestion.</param>
         public UploadCallDetailsHandler(
-            IFactory<ICallDetailRepository> repositoryFactory, 
-            ISender sender, 
+            IMessageBus sender,
+            IFactory<ICallDetailRepository> repositoryFactory,
             IOptions<CallDetailsOptions> options)
 
         {
@@ -48,7 +50,7 @@ namespace Giacom.Cdr.Application.Handlers
         public async Task Handle(UploadCallDetailsRequest command, CancellationToken cancellationToken)
         {
             // Split the input CSV stream into multiple temporary files for ingestion.
-            var tempFiles = await sender.Send(
+            var tempFiles = await sender.InvokeAsync<IEnumerable<string>>(
                 new SplitCallDetailsCsvRequest(command.Stream, Path.GetFileNameWithoutExtension(command.FileName), options.Value.IngestMaxLines),
                 cancellationToken);
 
@@ -60,7 +62,7 @@ namespace Giacom.Cdr.Application.Handlers
                 var fileId = Path.GetFileName(path);
 
                 // Ingest the file stream using the repository
-                // factory pattern used becouse of thread-safety of repository implementation is unknown
+                // factory pattern used becouse thread-safety of repository implementation is unknown
                 await repositoryFactory.Create().IngestAsync(stream, fileId);
             });
         }

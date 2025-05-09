@@ -1,12 +1,12 @@
-using System.Reflection;
 using Mapster;
 using Serilog;
-using MediatR;
+using Wolverine;
 
 using Giacom.Cdr.Domain;
 using Giacom.Cdr.Application;
-using Giacom.Cdr.Application.Common;
 using Giacom.Cdr.Infrastructure.Repository;
+using Giacom.Cdr.Application.Common.Wolverine;
+
 
 
 
@@ -33,8 +33,9 @@ namespace Giacom.Cdr.Api
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
-            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(DiagnosticsPipelineBehavior<,>));
+
+            builder.Host.UseWolverine(opts => opts.Policies.AddMiddleware<DiagnosticsMiddleware>(chain => true));
+
             builder.Services.Configure<CallDetailsOptions>(options => builder.Configuration.Bind("CallDetailOptions", options));
             builder.Services.AddAdxClassDetailRepository(builder.Configuration);
         }
@@ -50,7 +51,7 @@ namespace Giacom.Cdr.Api
             app.MapControllers();
 
             // Mapster configuration
-            TypeAdapterConfig.GlobalSettings.MapModels();
+            TypeAdapterConfig.GlobalSettings.MapCallDetailsModels();
         }
     }
 }

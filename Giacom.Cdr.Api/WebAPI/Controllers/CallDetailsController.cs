@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
-using MediatR;
+using Wolverine;
 using Giacom.Cdr.Application.Handlers;
 using Giacom.Cdr.Domain.Entities;
+
+
 
 
 namespace Giacom.Cdr.WebAPI.Controllers
@@ -15,13 +17,13 @@ namespace Giacom.Cdr.WebAPI.Controllers
     {
         private const long MaxFileSize = 100L * 1024L * 1024L * 1024L; // 100GB
 
-        private readonly ISender sender;
+        private readonly IMessageBus sender;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CallDetailsController"/> class.
         /// </summary>
         /// <param name="sender">The MediatR sender for handling requests.</param>
-        public CallDetailsController(ISender sender)
+        public CallDetailsController(IMessageBus sender)
         {
             this.sender = sender;
         }
@@ -41,7 +43,7 @@ namespace Giacom.Cdr.WebAPI.Controllers
                 return BadRequest("CSV file is required.");
             }
             using var stream = file.OpenReadStream();
-            await sender.Send(new UploadCallDetailsRequest(stream, file.FileName));
+            await sender.InvokeAsync(new UploadCallDetailsRequest(stream, file.FileName));
             return Ok();
         }
 
@@ -54,7 +56,7 @@ namespace Giacom.Cdr.WebAPI.Controllers
         [HttpGet("getByCaller")]
         public Task<IEnumerable<CallDetail>> GetByCaller([FromQuery] long? caller, [FromQuery] int? take)
         {
-            return sender.Send(new QueryCallDetailsRequest(caller, take));
+            return sender.InvokeAsync<IEnumerable<CallDetail>>(new QueryCallDetailsRequest(caller, take));
         }
     }
 }

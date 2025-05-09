@@ -39,7 +39,7 @@ namespace Giacom.Cdr.UnitTests
         [InlineData(10000, 1000, 10)]
         public async Task SplitCsvFile_CsvHasCorrectFormat_ResultHasCorrectStructure(int recordCount, int maxRecordCount, int expectedFileCount)
         {
-            TypeAdapterConfig.GlobalSettings.MapModels();
+            TypeAdapterConfig.GlobalSettings.MapCallDetailsModels();
 
             // arrange: generate a CSV file with data rows (plus header)
             var tempFile = GenerateTemporaryCsvFile(recordCount);
