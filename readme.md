@@ -19,7 +19,7 @@ The fundamental design decision is the choice of persistent storage. A Call Deta
 
 3. **ADX Configuration**
 
-   * ADX settings (connection strings, retry policies, etc.) are specified in `AdxCallDetailRepositoryOptions`.
+   * ADX settings (connection strings, retry policies, etc.) are specified in [AdxCallDetailRepository](Giacom.Cdr.Api/Infrastructure/Repository/AdxClassDetailRepository.cs).
    * Solution assumes the existence of a Kusto table with the following structure:
 
 
@@ -43,7 +43,7 @@ Current config points to preconfigured ADX cluster available for testing. You sh
 
 * **Domain**: Defines the [CallDetail](Giacom.Cdr.Api/Domain/Entities/CallDetail.cs) entity.
 
-* **Application**: Implements use cases [SplitCallDetailsCsvHandler](Giacom.Cdr.Api/Application/Handlers/SplitCallDetailsCsvHandler.cs), [UploadCallDetailsHandler](Giacom.Cdr.Api/Application/Handlers/UploadCallDetailsHandler.cs),  [QueryCallDetailsHandler](Giacom.Cdr.Api/Application/Handlers/QueryCallDetailsHandler.cs) and their options in (CallDetailsOptions)[Giacom.Cdr.Api/Application/CallDetailsOptions.cs]
+* **Application**: Implements use cases [SplitCallDetailsCsvHandler](Giacom.Cdr.Api/Application/Handlers/SplitCallDetailsCsvHandler.cs), [UploadCallDetailsHandler](Giacom.Cdr.Api/Application/Handlers/UploadCallDetailsHandler.cs),  [QueryCallDetailsHandler](Giacom.Cdr.Api/Application/Handlers/QueryCallDetailsHandler.cs) and their options in [CallDetailsOptions](Giacom.Cdr.Api/Application/CallDetailsOptions.cs)
 
 * **WebAPI**: Exposes [upload](Giacom.Cdr.Api/WebAPI/Controllers/CallDetailsController.cs#L39) and [query](Giacom.Cdr.Api/WebAPI/Controllers/CallDetailsController.cs#L57) endpoints. Although the requirements didn't specify any read operations, I added a query endpoint to allow verifying that the data was successfully uploaded. In a real scenario, the read API would likely be separated into its own service.
 
