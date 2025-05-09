@@ -23,16 +23,15 @@ The fundamental design decision is the choice of persistent storage. A Call Deta
    * Solution assumes the existence of a Kusto table with the following structure:
 
    ```kusto
-   .create table CallDetails (
-     caller_id: string,
-     recipient: string,
-     call_date: datetime,
-     end_time: datetime,
-     duration: long,
-     cost: real,
-     reference: string,
-     currency: string
-   )
+.create table CallDetails (
+caller_id: long, 
+recipient: long, 
+call_end_datetime: datetime, 
+duration: int, 
+cost: real, 
+reference: string, 
+currency: string
+) 
    ```
 
 Current config points to preconfigured ADX cluster available for testing.
@@ -73,6 +72,7 @@ Current config points to preconfigured ADX cluster available for testing.
 
 * Remove sensitive data from configuration.
 * Enable integration tests to create and tear down ADX resources per run.
+* Integration test for deduplication on ADX level (e.g. ingest same file twice)
 * The upload endpoint uses multipart/form-data, which is not the recommended method for uploading large files; however, I believe that if there is no parallel upload of a large number of files, it is still usable. An alternative is streaming directly from the HTTP body.
 * Checkpointing: If an upload needs to be retried completely, all chunks are resent (deduplication occurs only in ADX). It would be nice to store successfully sent CSV chunks in a simple separate storage (e.g., Azure Table Storage) and on subsequent uploads ingest only the missing data.
 * CSV splitting and sending CSV chunks could run partially in parallel. The benefit probably wouldn't be significant, since CSV splitting is many times faster than the upload itself, but it primarily depends on upload bandwidth, which in my DEV environment is not particularly impressive. However, as uploads occur only once daily, the cost-to-performance ratio of this optimization doesn't seem favorable; I’d stick to the golden rule: "Premature optimization is the root of all evil."
