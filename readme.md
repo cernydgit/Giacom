@@ -1,4 +1,4 @@
-# CDR Details API
+# CDR API
 
 ## Design
 
