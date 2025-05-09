@@ -9,13 +9,13 @@ The fundamental design decision is the choice of persistent storage. A Call Deta
    * The input CSV file is split into smaller chunks.
    * Each chunk is compressed and sent in parallel to ADX using queued ingest, eliminating the need for custom retry logic.
    * Memory usage remains approximately 350 MB regardless of input file size.
-   * CSV chunk size and parallelism are configurable via `CallDetailsOptions`.
+   * CSV chunk size and parallelism are configurable via [CallDetailsOptions](Giacom.Cdr.Api/Application/CallDetailsOptions.cs).
 
 2. **Schema Adjustments & Validation**
 
    * Input data structure is adjusted to match ADX-supported types (e.g., merging `call_date` and `end_time`).
    * Transformation logic is simple and sensitive to column order; header validation ensures correct schema before ingestion.
-   * Deduplication on retry is based on the input file name.
+   * [Deduplication](Giacom.Cdr.Api/Infrastructure/Repository/AdxClassDetailRepository.cs#L56) on retry is based on the input file name.
 
 3. **ADX Configuration**
 
