@@ -53,7 +53,7 @@ Current config points to preconfigured ADX cluster available for testing. You sh
 
 * In-process messaging uses the **Wolverine** library (more ambitious and minimal boilerplate compared to **MediatR**).
 * Mapping is done with **Mapster** for performance and flexibility (faster and more extensible than **AutoMapper**).
-* Basic diagnostics are provided by `DiagnosticsMiddleware`.
+* Basic diagnostics are provided by [DiagnosticsMiddleware](Giacom.Cdr.Api/Application/Common/Wolverine/DiagnosticsMiddleware.cs).
 
 ## Tests
 
