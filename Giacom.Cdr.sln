@@ -7,10 +7,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giacom.Cdr.IntegrationTests", "Giacom.Cdr.IntegrationTests\Giacom.Cdr.IntegrationTests.csproj", "{8E10153D-FD16-49A0-AB03-D678A8DDD3BF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
-	ProjectSection(SolutionItems) = preProject
-		KQLScripts\CallDetails.kql = KQLScripts\CallDetails.kql
-		TODO.txt = TODO.txt
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Giacom.Cdr.UnitTests", "Giacom.Cdr.UnitTests\Giacom.Cdr.UnitTests.csproj", "{CCC3FF17-BB8A-4D70-9A5C-3B2DBFE6016E}"
 EndProject

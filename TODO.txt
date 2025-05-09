@@ -1,48 +1,13 @@
 TODO: 
 
 CallDetails3
-Mapster extension dat do infrastructure k repository ? nebo prejmenovat na domain extensions?
 
-solution
- - deplication
- - nasty trick for transformation
- - testy jsou data dependet
- - Buffering - protoze frekvence uploadu je nizka
- - distributed env (nemuzeme ukladat lokalne)
- - assumption FileNot ingested twice?
- - add xml comments
- - split csv tests
- - optimize split
+ 
+ 
 
 
-extensions
- - testy jsou data dependet
- - very sensitive on input data - order of columns
- - Solution #3: Use materialized views to deduplicate
- - error handling (spadle ingestion jobs)
- - deduplication
- - validace csv
- - sensitive data
- - store file localy
- - compression
- - metadata odstranit z Model
- - sql command timeout set on lower level
- - overlapping files?
- - wolverine
- - lepsi inicializace testu
- - SoanryQube
- - vytvoreni/smazani db v ramci testu
- - retry
- - repository, cqrs
- - rozdelit projekty na Api/Application
- - oddelit klienta a schovat za interface
- - separatni db pro testy 
- - store to blob storage and  process in background
- - unit testy
- - XML dokumnentace swaggeru
- - validce parametru v kontrolleru
- - validce v modelu - pridat hlasky
- - validce v modelu - pridat testy
+
+
 
 
 
