@@ -1,1 +1,1 @@
-.create table CallDetails (caller_id: string, recipient: string, call_date: datetime, end_time: datetime, duration: long, cost: real, reference: string, currency: string)  
+.create table CallDetails (caller_id: long, recipient: long, call_end_datetime: datetime, duration: int, cost: real, reference: string, currency: string) 

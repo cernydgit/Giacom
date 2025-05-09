@@ -1,15 +1,16 @@
 using System.Globalization;
 using Microsoft.Extensions.Logging;
-using CsvHelper;
 using Mapster;
 using FluentAssertions;
+using CsvHelper;
 using NBench;
 using Pro.NBench.xUnit.XunitExtensions;
 using Moq;
 
 using Giacom.Cdr.Application.Handlers;
 using Giacom.Cdr.Domain;
-using System.IO;
+
+
 
 namespace Giacom.Cdr.UnitTests
 {

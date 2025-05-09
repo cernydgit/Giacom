@@ -137,7 +137,7 @@ namespace Giacom.Cdr.Application.Handlers
             public void WriteLine(string line)
             {
                 // transformed line and write it to the chunk file
-                // transform the line to merge all_date and call_end_time
+                // transform the line to merge call_date and end_time
                 writer.WriteLine(TransformLine(line));
                 CurrentRow++;
             }
@@ -146,7 +146,7 @@ namespace Giacom.Cdr.Application.Handlers
             {
                 try
                 {
-                    // Merge call_date and call_end_time into a single field
+                    // Merge call_date and end_time into a single field
                     var dateTimeIndex = FindChar(line, ',', 3);
                     return string.Concat(line.Substring(0, dateTimeIndex).TrimEnd(), " ", line.Substring(dateTimeIndex + 1).TrimStart());
                 }
