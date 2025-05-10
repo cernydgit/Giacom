@@ -2,19 +2,21 @@
 
 ## Design
 
-The fundamental design decision is the choice of persistent storage. A Call Detail Record (CDR) is a time series with a fixed structure, so Azure Data Explorer (ADX) appears to be a suitable option.
+The fundamental design decision is the choice of persistent storage. 
+A Call Detail Record (CDR) is a time series with a fixed structure, so Azure Data Explorer appears to be a suitable option - it is able to ingest large amounts of data quickly and efficiently, and it is optimized for time series data.
+There are many alternatives to ADX, but simplicity was my main criterium for this task (ADX supports "queued ingest"", that guaranties at-least-once delivery, eliminating the need for custom retry logic.), so I didn't compare cost with other options.
 
 1. **Chunked CSV Ingestion**
 
    * The input CSV file is split into smaller chunks.
-   * Each chunk is compressed and sent in parallel to ADX using queued ingest, that guaranties at-least-once delivery, eliminating the need for custom retry logic.
+   * Each chunk is compressed and sent in parallel to ADX using queued ingest
    * Memory usage remains approximately 350 MB regardless of input file size.
    * CSV chunk size and parallelism are configurable via [CallDetailsOptions](Giacom.Cdr.Api/Application/CallDetailsOptions.cs).
 
 2. **Schema Adjustments & Validation**
 
    * Input data structure is adjusted to match ADX-supported types (e.g., merging `call_date` and `end_time`).
-   * Transformation logic is simple and sensitive to column order; header validation ensures correct schema before ingestion.
+   * [Transformation logic](Giacom.Cdr.Api/Application/Handlers/SplitCallDetailsCsvHandler.cs#L145) is simple and sensitive to column order; header validation ensures correct schema before ingestion.
    * [Deduplication](Giacom.Cdr.Api/Infrastructure/Repository/AdxClassDetailRepository.cs#L56) on retry is based on the input file name.
 
 3. **ADX Configuration**
@@ -39,7 +41,7 @@ Current config points to preconfigured ADX cluster available for testing. You sh
 
 ## Project Structure
 
-* The project is divided into four main traditional namespaces following clean architecture principles: Domain, Application, WebAPI, and Infrastructure. All layers remain in a one project, with dependencies only pointing inward. Splitting into separate projects per layer seems to me like overkill in this simple case.&#x20;
+* The project is divided into four main traditional namespaces following clean architecture principles: Domain, Application, API, and Infrastructure. All layers remain in a one project, with dependencies only pointing inward. Splitting into separate projects per layer seems to me like overkill in this simple case.&#x20;
 
 * **Domain**: Defines the [CallDetail](Giacom.Cdr.Api/Domain/Entities/CallDetail.cs) entity.
 
@@ -54,6 +56,8 @@ Current config points to preconfigured ADX cluster available for testing. You sh
 * In-process messaging uses the **Wolverine** library (more ambitious and minimal boilerplate compared to **MediatR**).
 * Mapping is done with **Mapster** for performance and flexibility (faster and more extensible than **AutoMapper**).
 * Basic diagnostics are provided by [DiagnosticsMiddleware](Giacom.Cdr.Api/Application/Common/Wolverine/DiagnosticsMiddleware.cs).
+
+Since this is a small project, this solution may seem like over-engineering. My aim was to demonstrate how I would approach a real project, assuming it would continue to develop and grow quickly.
 
 ## Tests
 
